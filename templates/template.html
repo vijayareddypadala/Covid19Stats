@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Covid-19</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<style type="text/css">
+	.header .navbar {
+		background: #FE8484  !important;
+	}
+	.header .navbar .navbar-brand{
+		color: snow;
+		font-size: 1.4em;
+		font-weight: bold; !important;
+	}
+	.header .navbar .collapse .navbar-nav .nav-item .nav-link{
+		color: #fff !important;
+		font-size: 1.1em;
+	}
+	.header .navbar .collapse .navbar-nav .active .nav-link{
+		font-weight: bold;
+	}
+	.main-content{
+		margin-left: 3%;
+	}
+</style>
+<body>
+	<div class="header">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	        <a class="navbar-brand" href="{{ url_for('home') }}">Covid-Awareness</a>
+	        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    			<span class="navbar-toggler-icon"></span>
+  			</button>
+			{% set navbar_menus = [
+        		('/', 'home', 'Home'),
+        		('/statistics', 'Statistics', 'Statistics'),
+        	] -%}
+        	{% set active_page = active_page | default('home') -%}
+  			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			    <ul class="navbar-nav mr-auto">
+			    	{% for href, id, caption in navbar_menus %}
+				    	<li class="nav-item {% if id == active_page %} active {% endif %}">
+					    	<a class="nav-link" href="{{href}}">{{caption}}</a>
+				    	</li>
+				    {% endfor %}
+			    </ul>
+				{% set userLogged = request.cookies.get('userloggedin')  -%}
+			    <ul class="navbar-nav">
+				    {% if userLogged %}
+				    	<li class="nav-item">
+				    		<a class="nav-link" href="{{ url_for('logout') }}">Hello, {{userLogged}}! Logout </a>
+				    	</li>
+				    {% else %}
+				    	<li class="nav-item">
+				    		<a class="nav-link" href="{{ url_for('login') }}">Login/Register</a>
+				    	</li>
+				    {% endif %}
+			    </ul>
+		  </div>
+		</nav>
+	</div>
+	<div class="main-content">
+		{% block content %}
+    	{% endblock %}
+	</div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</html>

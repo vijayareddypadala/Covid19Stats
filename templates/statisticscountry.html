@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Statistics of {{country_code}} Past {{past_days}}</title>
+</head>
+<body>
+	{% extends "template.html" %}
+    {% block content %}
+	<div class="container">
+		<div class="search_form" style="margin: 4%">
+			<form action="/statistics/{{country_name}}/{{country_code}}" method="POST">
+                <div class="row form-group">
+                    <div class="col-md-5">
+                    	<input type="number" min="1" max="180" class="form-control" placeholder="Enter Days" name="past_day" value="" required />
+                    </div>
+                    <div class="col-md-5">
+                    	<input type="submit" class="btnSubmit" value="Change" />
+                    </div>
+                </div>
+            </form>
+		</div>
+		<div class="total_cases">
+			<h2>Total Cases of the {{country_name}} [{{country_code}}]</h2>
+			<p>
+				New Confirmed Cases: {{country_data[0]}}<br>
+	    		New Deaths Cases: {{country_data[1]}}<br>
+	    		Total Confirmed Cases: {{country_data[2]}}<br>
+	    		Total Recovered Cases: {{country_data[3]}}<br>
+	    		Total Deaths Cases: {{country_data[4]}}<br>
+			</p>
+		</div>
+		<div class="plots">
+			<img src="{{url_for('static', filename= img_urls[0] + country_code + '.png')}}" height="400" width="800">
+			<img src="{{url_for('static', filename= img_urls[1] + country_code + '.png')}}" height="400" width="800">
+			<img src="{{url_for('static', filename= img_urls[2] + country_code + '.png')}}" height="400" width="800">
+			<img src="{{url_for('static', filename= img_urls[3] + country_code + '.png')}}" height="400" width="800">
+			<img src="{{url_for('static', filename= img_urls[4] + country_code + '.png')}}" height="400" width="800">
+		</div>
+	</div>
+	{% endblock %}
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Covid19 Statistics</title>
+</head>
+<style type="text/css">
+	.main-container{
+		margin: 3%;
+	}
+	.country-wise{
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.country{
+		text-align: center;
+		width: 400px;
+		padding: 3%;
+    	box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+    	margin: 1%;
+	}
+</style>
+<body onload="getCountries();">
+	{% extends "template.html" %}
+	{% set active_page = "statistics" %}
+    {% block content %}
+
+    <div class="main-container">
+    	<div class="search_form" style="margin: 4%">
+			<div class="row form-group">
+                <div class="col-md-5">
+                	<input type="text" style="text-transform: uppercase;" class="form-control" placeholder="Enter Country Code" name="countryCode" id="countryCode" value="" />
+                </div>
+                <div class="col-md-5">
+                	<button onclick="checkCountry();" class="btnSubmit">
+                		Search
+                	</button>
+                </div>
+            </div>
+		</div>
+    	<div class="global-statistics" style="margin: 1%;">
+	    	<h2> Global Statistics </h2>
+	    	<div class="row">
+	    		<div class="col-md-5" style="margin-top: 4%;">
+		    		New Confirmed Cases: {{res['Global']['NewConfirmed']}}<br>
+		    		New Deaths Cases: {{res['Global']['NewDeaths']}}<br>
+		    		New Recovered Cases: {{res['Global']['NewRecovered']}}<br>
+		    		Total Confirmed Cases: {{res['Global']['TotalConfirmed']}}<br>
+		    		Total Deaths Cases: {{res['Global']['TotalDeaths']}}<br>
+		    		Total Recovered Cases: {{res['Global']['TotalRecovered']}}
+		    	</div>
+		    	<div class="col-md-6">
+		    		<img src="{{url_for('static', filename=global_img_url)}}" height="300" width="500">
+		    	</div>
+	    	</div>
+	    </div>
+	    <script type="text/javascript">
+	    	var countries_list = {};
+
+	    	function getCountries(){
+	    		var searchElm = document.getElementById("country-wise").children;
+    			for(var i=0; i<searchElm.length; i++){
+    				countries_list[searchElm[i].id] = searchElm[i].getAttribute("name");
+    			}
+	    		console.log(countries_list);
+	    	}
+
+	    	function checkCountry(){
+	    		if(typeof countries_list !== 'undefined' && Object.keys(countries_list).length > 0){
+	    			var temp = document.getElementById('countryCode').value;
+	    			if(temp === undefined || temp === ''){
+	    				alert('Please Enter Country Code');
+	    			}else{
+	    				if(countries_list[temp.toUpperCase()] !== 'undefined'){
+	    					check(temp, countries_list[temp.toUpperCase()]);
+	    				}
+	    			}
+	    		}
+	    	}
+	    	function check(temp, name) {
+	    		var x = document.cookie;
+	    		if(x === ""){
+	    			alert('Feature Restricted to Registered Users Only');
+	    		}else{
+	    			window.location.href = "/statistics/" + name + '/' + temp;
+	    		}
+	    	}
+	    </script>
+	    <div class="country-wise" id="country-wise">
+	    	{% for i in countries %}
+	    		<div class="country" id="{{i['CountryCode']}}" name="{{i['Country']}}">
+	    			<a id="{{i['CountryCode']}}" name="{{i['Country']}}" style="text-decoration: none; color:#000; cursor: pointer;"
+	    					onclick="check(this.id, this.name);">
+	    				<h2> {{i['Country']}}  [{{i['CountryCode']}}] </h2>
+		    			<p>
+		    				New Confirmed Cases: {{i['NewConfirmed']}}<br>
+				    		New Deaths Cases: {{i['NewDeaths']}}<br>
+				    		New Recovered Cases: {{i['NewRecovered']}}<br>
+				    		Total Confirmed Cases: {{i['TotalConfirmed']}}<br>
+				    		Total Deaths Cases: {{i['TotalDeaths']}}<br>
+				    		Total Recovered Cases: {{i['TotalRecovered']}}
+		    			</p>
+	    			</a>
+	    		</div>
+	    	{% endfor %}
+	    </div>
+    </div>
+
+    {% endblock %}
+</body>
+</html>
